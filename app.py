@@ -15,6 +15,9 @@
 
 from numpy import *
 import time
+import pygame, sys
+from pygame.locals import *
+
 #REMBER NUMPY ARGS A Y,X NOT X,Y
 #10x10 grid
 #grid_width = 100
@@ -23,6 +26,7 @@ import time
 
 #do somthing with pythons optional parameters to allow for test
 #objects and if not resent fall back onto global grid object
+
 
 def count_alive(cells):
     count = 0
@@ -112,6 +116,11 @@ def render(grid):
         renderStr + "\n"
     print renderStr
 
+def renderWindow(grid):
+    print "render window"
+    
+    
+
 def run():
     grid = zeros((10,10))
     #initial pattern
@@ -139,5 +148,6 @@ def run():
 # compute all nesecary changes before updateing grid do not update
 # prior to tick
 if __name__ == '__main__':
-    run()
+    renderWindow(0)
+    #run()
     
