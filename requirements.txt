@@ -1,4 +1,7 @@
 argparse==1.2.1
+epc==0.0.5
+jedi==0.7.0
 numpy==1.8.0
 pygame==1.9.1release
+sexpdata==0.0.3
 wsgiref==0.1.2
