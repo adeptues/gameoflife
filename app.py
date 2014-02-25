@@ -28,6 +28,23 @@ from pygame.locals import *
 #objects and if not resent fall back onto global grid object
 
 
+pygame.init()
+fpsClock =  pygame.time.Clock()
+ws = pygame.display.set_mode((255,255))
+# This sets the width and height of each grid location
+width  = 20
+height = 20
+ 
+# This sets the margin between each cell
+margin = 5
+
+# Define some colors
+black    = (   0,   0,   0)
+white    = ( 255, 255, 255)
+green    = (   0, 255,   0)
+red      = ( 255,   0,   0)
+runflag = False
+
 def count_alive(cells):
     count = 0
     for i in cells:
@@ -117,9 +134,18 @@ def render(grid):
     print renderStr
 
 def renderWindow(grid):
-    print "render window"
-    
-    
+        # Draw the grid
+    for row in range(10):
+        for column in range(10):
+            color = white
+            if grid[row][column] == 1:
+                color = green
+            pygame.draw.rect(ws,
+                             color,
+                             [(margin+width)*column+margin,
+                              (margin+height)*row+margin,
+                              width,
+                              height])
 
 def run():
     grid = zeros((10,10))
@@ -128,26 +154,65 @@ def run():
  #   grid[2,3] = 1
   #  grid[1,4] = 1
    # grid[2, 4] = 1
+   #oscilator
     grid[3,1] = 1
     grid[4,1] = 1
     grid[5,1] = 1
     while True:
-        nextg = zeros((10,10))
-        for y in range(10):
-            for x in range(10):
-                alive = tick(grid,y,x)
-                if alive:
-                    nextg[y,x] = 1
-                else:
-                    nextg[y,x] = 0
-        grid = nextg
-        print grid
+        if runflag:
+            nextg = zeros((10,10))
+            for y in range(10):
+                for x in range(10):
+                    alive = tick(grid,y,x)
+                    if alive:
+                        nextg[y,x] = 1
+                    else:
+                        nextg[y,x] = 0
+            grid = nextg
+            print grid
+        renderWindow(grid)
+        handle_events(grid)
+        pygame.display.update()
         time.sleep(1)
 
+def handle_events(grid):
+    global runflag
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            print "exiting"
+            pygame.quit()
+            sys.exit()
+        elif event.type == MOUSEMOTION:
+            print "mouse coords"+str(event.pos)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            # User clicks the mouse. Get the position
+            pos = pygame.mouse.get_pos()
+            # Change the x/y screen coordinates to grid coordinates
+            column = pos[0] // (width + margin)
+            row = pos[1] // (height + margin)
+            # Sete t hat location to zero
+            grid[row][column] = 1
+            print("Click ", pos, "Grid coordinates: ", row, column)
+        elif event.type == KEYDOWN:
+            if event.key == K_ESCAPE or event.key == K_q:
+                pygame.event.post(pygame.event.Event(QUIT))
+            if event.key == K_SPACE:
+                if runflag:
+                    runflag = False
+                else:
+                    runflag = True
+
+def runtest(grid):
+    while True:
+        handle_events()
+        renderWindow(grid)
+        pygame.display.update()
+    
 # the rules need to be applied simultaneously not sequentially or
 # compute all nesecary changes before updateing grid do not update
 # prior to tick
 if __name__ == '__main__':
-    renderWindow(0)
-    #run()
+    run()
     
+
+
