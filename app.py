@@ -191,7 +191,10 @@ def handle_events(grid):
             column = pos[0] // (width + margin)
             row = pos[1] // (height + margin)
             # Sete t hat location to zero
-            grid[row][column] = 1
+            if grid[row][column] == 1:
+                grid[row][column] = 0
+            else:
+                grid[row][column] = 1
             print("Click ", pos, "Grid coordinates: ", row, column)
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE or event.key == K_q:
